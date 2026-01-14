@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <title>Weather App</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
 <div class="app">
 
-  <!-- LEFT PANEL -->
+  <!-- LEFT -->
   <div class="left">
     <input type="text" id="cityInput" placeholder="Search city..." />
     <img id="weatherIcon" src="">
@@ -19,13 +19,13 @@
     <p id="location"></p>
   </div>
 
-  <!-- RIGHT PANEL -->
+  <!-- RIGHT -->
   <div class="right">
 
     <div class="top">
       <div class="tabs">
-        <span class="active">Today</span>
-        <span>Week</span>
+        <span id="todayTab" class="active">Today</span>
+        <span id="weekTab">Week</span>
       </div>
 
       <div class="unit-toggle">
@@ -34,10 +34,10 @@
       </div>
     </div>
 
-    <!-- HOURLY -->
+    <!-- TODAY -->
     <div class="hourly" id="hourly"></div>
 
-    <!-- WEEKLY -->
+    <!-- WEEK -->
     <div class="weekly" id="weekly"></div>
 
     <h3>Today's Highlights</h3>
@@ -51,6 +51,6 @@
   </div>
 </div>
 
-<script src="script.js"></script>
+<script src="js/script.js"></script>
 </body>
 </html>
