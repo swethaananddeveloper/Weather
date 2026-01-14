@@ -6,20 +6,22 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+<section>
+  
+  <div class="app">
 
-<div class="app">
-
-  <!-- LEFT -->
+  <!-- LEFT PANEL -->
   <div class="left">
-    <input type="text" id="cityInput" placeholder="Search city..." />
-    <img id="weatherIcon" src="">
+    <input type="text" id="cityInput" placeholder="Search..." />
+    <button id="searchBtn" style="background-color: rgb(35, 132, 184);">Search</button>
+    <img id="weatherIcon" src="" alt="Weather Icon">
     <h1><span id="mainTemp">--</span>°</h1>
-    <p id="dateTime"></p>
-    <p id="condition"></p>
-    <p id="location"></p>
+    <p id="dateTime">--</p>
+    <p id="condition">--</p>
+    <p id="location">--</p>
   </div>
 
-  <!-- RIGHT -->
+  <!-- RIGHT PANEL -->
   <div class="right">
 
     <div class="top">
@@ -34,22 +36,27 @@
       </div>
     </div>
 
-    <!-- TODAY -->
+    <!-- HOURLY FORECAST -->
     <div class="hourly" id="hourly"></div>
 
-    <!-- WEEK -->
+    <!-- WEEKLY FORECAST -->
     <div class="weekly" id="weekly"></div>
-
+<br>
+<br>
     <h3>Today's Highlights</h3>
     <div class="highlights">
-      <div class="card">Wind <span id="wind">--</span> km/h</div>
+      <div class="card">Wind status <span id="wind">--</span> km/h</div>
       <div class="card">Humidity <span id="humidity">--</span>%</div>
-      <div class="card">Sunrise <span id="sunrise">--</span></div>
-      <div class="card">Visibility <span id="visibility">--</span></div>
+      <div class="card">Sunrise & Sunset <span id="sunrise">--</span></div>
+      <div class="card">Visibility <span id="visibility">--</span> km</div>
+      <div class="card">UV Index <span id="UVIndex">--</span></div>
+      <div class="card">Air Quality <span id="AirQuality">--</span></div>
     </div>
+    <br>
+  <p style="text-align: center;">Weather Prediction App by Swetha Anand</p>
 
   </div>
-</div>
+
 
 <script src="js/script.js"></script>
 </body>

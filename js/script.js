@@ -5,70 +5,86 @@ let mainTempC = 0;
 let hourlyTempsC = [];
 let weeklyData = [];
 
-/* WEATHER MAP WITH BACKGROUNDS */
+/* WEATHER ICONS & BACKGROUNDS */
 const weatherMap = {
-  "partly-cloudy-day": {
-    icon: "https://i.ibb.co/PZQXH8V/27.png",
-    bg: "https://i.ibb.co/qNv7NxZ/pc.webp"
-  },
-  "partly-cloudy-night": {
-    icon: "https://i.ibb.co/Kzkk59k/15.png",
-    bg: "https://i.ibb.co/RDfPqXz/pcn.jpg"
-  },
-  "rain": {
-    icon: "https://i.ibb.co/kBd2NTS/39.png",
-    bg: "https://i.ibb.co/h2p6Yhd/rain.webp"
-  },
-  "clear-day": {
-    icon: "https://i.ibb.co/rb4rrJL/26.png",
-    bg: "https://i.ibb.co/WGry01m/cd.jpg"
-  },
-  "clear-night": {
-    icon: "https://i.ibb.co/1nxNGHL/10.png",
-    bg: "https://i.ibb.co/kqtZ1Gx/cn.jpg"
-  },
-  "default": {
-    icon: "https://i.ibb.co/rb4rrJL/26.png",
-    bg: "https://i.ibb.co/qNv7NxZ/pc.webp"
-  }
+  "partly-cloudy-day": { icon: "https://i.ibb.co/PZQXH8V/27.png", bg: "https://i.ibb.co/qNv7NxZ/pc.webp" },
+  "partly-cloudy-night": { icon: "https://i.ibb.co/Kzkk59k/15.png", bg: "https://i.ibb.co/RDfPqXz/pcn.jpg" },
+  "rain": { icon: "https://i.ibb.co/kBd2NTS/39.png", bg: "https://i.ibb.co/h2p6Yhd/rain.webp" },
+  "clear-day": { icon: "https://i.ibb.co/rb4rrJL/26.png", bg: "https://i.ibb.co/WGry01m/cd.jpg" },
+  "clear-night": { icon: "https://i.ibb.co/1nxNGHL/10.png", bg: "https://i.ibb.co/kqtZ1Gx/cn.jpg" },
+  "default": { icon: "https://i.ibb.co/rb4rrJL/26.png", bg: "https://i.ibb.co/qNv7NxZ/pc.webp" }
 };
 
-/* SEARCH */
+/* SEARCH - ENTER KEY */
 document.getElementById("cityInput").addEventListener("keypress", e => {
-  if (e.key === "Enter") fetchWeather(e.target.value);
+  if (e.key === "Enter") {
+    let city = e.target.value.trim();
+    if (!city) return alert("Please enter a city");
+    fetchWeather(city);
+  }
 });
 
-/* FETCH WEATHER */
+/* SEARCH - BUTTON CLICK */
+document.getElementById("searchBtn").addEventListener("click", () => {
+  let city = document.getElementById("cityInput").value.trim();
+  if (!city) return alert("Please enter a city");
+  fetchWeather(city);
+});
+
+/* FETCH WEATHER FUNCTION */
 function fetchWeather(city) {
-  fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${city}?unitGroup=metric&key=${API_KEY}&contentType=json`)
+  if (!city.includes(",")) city += ",IN";
+
+  fetch(`https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${encodeURIComponent(city)}?unitGroup=metric&key=${API_KEY}&contentType=json`)
     .then(res => res.json())
     .then(data => {
+      if (!data || !data.currentConditions) return alert("City not found");
+
       mainTempC = data.currentConditions.temp;
       hourlyTempsC = data.days[0].hours;
       weeklyData = data.days.slice(0, 7);
 
+      // Main info
       document.getElementById("mainTemp").innerText = Math.round(mainTempC);
       document.getElementById("condition").innerText = data.currentConditions.conditions;
       document.getElementById("location").innerText = data.resolvedAddress;
       document.getElementById("dateTime").innerText = new Date().toLocaleString();
 
-      // SET ICON AND BACKGROUND
-      setWeatherUI(data.currentConditions.icon);
+      // Set icon & background
+      setWeatherUI(data.currentConditions.conditions);
 
-      document.getElementById("wind").innerText = data.currentConditions.windspeed;
-      document.getElementById("humidity").innerText = data.currentConditions.humidity;
-      document.getElementById("visibility").innerText = data.currentConditions.visibility;
-      document.getElementById("sunrise").innerText = data.currentConditions.sunrise;
+      // Highlights
+      document.getElementById("wind").innerText = data.currentConditions.windspeed || "--";
+      document.getElementById("humidity").innerText = data.currentConditions.humidity || "--";
+      document.getElementById("visibility").innerText = data.currentConditions.visibility || "--";
+      document.getElementById("sunrise").innerText = `${data.days[0].sunrise} / ${data.days[0].sunset}`;
+      document.getElementById("UVIndex").innerText = data.currentConditions.uvindex || "--";
+      document.getElementById("AirQuality").innerText = data.currentConditions.feelslike || "--";
 
       updateHourly();
       updateWeekly();
     })
-    .catch(() => alert("City not found"));
+    .catch(err => {
+      console.error(err);
+      alert("City not found or API error");
+    });
+}
+
+/* MAP CONDITION TO ICON */
+function mapCondition(cond) {
+  cond = cond.toLowerCase();
+  if (cond.includes("partly cloudy")) return "partly-cloudy-day";
+  if (cond.includes("cloudy")) return "partly-cloudy-day";
+  if (cond.includes("rain") || cond.includes("drizzle")) return "rain";
+  if (cond.includes("clear") || cond.includes("sunny")) return "clear-day";
+  if (cond.includes("night")) return "clear-night";
+  return "default";
 }
 
 /* SET ICON & BACKGROUND */
 function setWeatherUI(condition) {
-  const weather = weatherMap[condition] || weatherMap.default;
+  const key = mapCondition(condition);
+  const weather = weatherMap[key] || weatherMap.default;
   document.getElementById("weatherIcon").src = weather.icon;
   document.body.style.backgroundImage = `url(${weather.bg})`;
 }
@@ -80,10 +96,11 @@ function updateHourly() {
 
   hourlyTempsC.forEach(h => {
     const temp = isCelsius ? h.temp : (h.temp * 9/5 + 32);
+    const icon = mapCondition(h.conditions);
     hourlyDiv.innerHTML += `
       <div class="hour">
         <p>${h.datetime.slice(0,5)}</p>
-        <img src="${weatherMap[h.icon]?.icon || weatherMap.default.icon}">
+        <img src="${weatherMap[icon]?.icon || weatherMap.default.icon}">
         <p>${Math.round(temp)}°</p>
       </div>
     `;
@@ -99,10 +116,11 @@ function updateWeekly() {
     const date = new Date(day.datetime);
     const weekday = date.toLocaleDateString("en-US", { weekday: "short" });
     const temp = isCelsius ? day.temp : (day.temp * 9/5 + 32);
+    const icon = mapCondition(day.conditions);
     weeklyDiv.innerHTML += `
       <div class="day">
         <p>${weekday}</p>
-        <img src="${weatherMap[day.icon]?.icon || weatherMap.default.icon}">
+        <img src="${weatherMap[icon]?.icon || weatherMap.default.icon}">
         <p>${Math.round(temp)}°</p>
       </div>
     `;
