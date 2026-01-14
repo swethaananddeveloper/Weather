@@ -1,0 +1,108 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+/* Dynamic image background */
+.background {
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
+  animation: bgChange 15s infinite;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Background image animation */
+@keyframes bgChange {
+  0% {
+    background-image: url("https://images.unsplash.com/photo-1501630834273-4b5604d2ee31");
+  }
+  50% {
+    background-image: url("https://images.unsplash.com/photo-1501973801540-537f08ccae7b");
+  }
+  100% {
+    background-image: url("https://images.unsplash.com/photo-1502082553048-f009c37129b9");
+  }
+}
+
+/* Common white box */
+.main-box {
+  width: 80%;
+  max-width: 900px;
+  background-color: white;
+  border-radius: 12px;
+  padding: 30px;
+  display: flex;
+  gap: 20px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+/* Left & Right sections */
+.section {
+  flex: 1;
+  padding: 20px;
+  border-radius: 8px;
+  background: #f9f9f9;
+}
+
+/* Black highlighted line */
+.highlight {
+  width: 100%;
+  height: 4px;
+  background-color: black;
+  margin-bottom: 15px;
+}
+
+/* Text */
+.section p {
+  font-size: 18px;
+  color: #333;
+  text-align: center;
+}
+
+ /* Search bar container */
+.search-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 25px;
+}
+
+/* Input field */
+.search-input {
+  width: 60%;
+  padding: 12px 15px;
+  border: 2px solid #ccc;
+  border-right: none;
+  border-radius: 8px 0 0 8px;
+  font-size: 16px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+/* Dynamic focus effect */
+.search-input:focus {
+  border-color: black;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Button */
+.search-btn {
+  padding: 12px 20px;
+  border: 1px solid black;
+  background-color: rgb(47, 154, 255);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 0 8px 8px 0;
+  transition: all 0.3s ease;
+}
+
+.search-btn ion-icon {
+  font-size: 24px;
+  color: white;
+}
