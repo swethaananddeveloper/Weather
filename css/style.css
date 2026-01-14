@@ -8,6 +8,7 @@
 body {
   background-size: cover;
   background-position: center;
+  transition: background 0.5s ease;
 }
 
 .app {
@@ -16,7 +17,7 @@ body {
   display: flex;
   border-radius: 20px;
   overflow: hidden;
-  background: #f8fafc;
+  background: rgba(248, 250, 252, 0.9);
 }
 
 /* LEFT */

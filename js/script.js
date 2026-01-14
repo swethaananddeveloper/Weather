@@ -5,13 +5,32 @@ let mainTempC = 0;
 let hourlyTempsC = [];
 let weeklyData = [];
 
-/* WEATHER ICONS */
+/* WEATHER MAP WITH BACKGROUNDS */
 const weatherMap = {
-  "clear-day": "https://i.ibb.co/rb4rrJL/26.png",
-  "partly-cloudy-day": "https://i.ibb.co/PZQXH8V/27.png",
-  "partly-cloudy-night": "https://i.ibb.co/Kzkk59k/15.png",
-  "rain": "https://i.ibb.co/kBd2NTS/39.png",
-  "default": "https://i.ibb.co/rb4rrJL/26.png"
+  "partly-cloudy-day": {
+    icon: "https://i.ibb.co/PZQXH8V/27.png",
+    bg: "https://i.ibb.co/qNv7NxZ/pc.webp"
+  },
+  "partly-cloudy-night": {
+    icon: "https://i.ibb.co/Kzkk59k/15.png",
+    bg: "https://i.ibb.co/RDfPqXz/pcn.jpg"
+  },
+  "rain": {
+    icon: "https://i.ibb.co/kBd2NTS/39.png",
+    bg: "https://i.ibb.co/h2p6Yhd/rain.webp"
+  },
+  "clear-day": {
+    icon: "https://i.ibb.co/rb4rrJL/26.png",
+    bg: "https://i.ibb.co/WGry01m/cd.jpg"
+  },
+  "clear-night": {
+    icon: "https://i.ibb.co/1nxNGHL/10.png",
+    bg: "https://i.ibb.co/kqtZ1Gx/cn.jpg"
+  },
+  "default": {
+    icon: "https://i.ibb.co/rb4rrJL/26.png",
+    bg: "https://i.ibb.co/qNv7NxZ/pc.webp"
+  }
 };
 
 /* SEARCH */
@@ -32,7 +51,9 @@ function fetchWeather(city) {
       document.getElementById("condition").innerText = data.currentConditions.conditions;
       document.getElementById("location").innerText = data.resolvedAddress;
       document.getElementById("dateTime").innerText = new Date().toLocaleString();
-      document.getElementById("weatherIcon").src = weatherMap[data.currentConditions.icon] || weatherMap.default;
+
+      // SET ICON AND BACKGROUND
+      setWeatherUI(data.currentConditions.icon);
 
       document.getElementById("wind").innerText = data.currentConditions.windspeed;
       document.getElementById("humidity").innerText = data.currentConditions.humidity;
@@ -45,6 +66,13 @@ function fetchWeather(city) {
     .catch(() => alert("City not found"));
 }
 
+/* SET ICON & BACKGROUND */
+function setWeatherUI(condition) {
+  const weather = weatherMap[condition] || weatherMap.default;
+  document.getElementById("weatherIcon").src = weather.icon;
+  document.body.style.backgroundImage = `url(${weather.bg})`;
+}
+
 /* UPDATE HOURLY */
 function updateHourly() {
   const hourlyDiv = document.getElementById("hourly");
@@ -55,7 +83,7 @@ function updateHourly() {
     hourlyDiv.innerHTML += `
       <div class="hour">
         <p>${h.datetime.slice(0,5)}</p>
-        <img src="${weatherMap[h.icon] || weatherMap.default}">
+        <img src="${weatherMap[h.icon]?.icon || weatherMap.default.icon}">
         <p>${Math.round(temp)}°</p>
       </div>
     `;
@@ -74,7 +102,7 @@ function updateWeekly() {
     weeklyDiv.innerHTML += `
       <div class="day">
         <p>${weekday}</p>
-        <img src="${weatherMap[day.icon] || weatherMap.default}">
+        <img src="${weatherMap[day.icon]?.icon || weatherMap.default.icon}">
         <p>${Math.round(temp)}°</p>
       </div>
     `;
