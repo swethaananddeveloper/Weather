@@ -31,7 +31,7 @@ document.getElementById("searchBtn").addEventListener("click", () => {
   fetchWeather(city);
 });
 
-/* FETCH WEATHER FUNCTION */
+/* FETCH WEATHER */
 function fetchWeather(city) {
   if (!city.includes(",")) city += ",IN";
 
@@ -50,8 +50,8 @@ function fetchWeather(city) {
       document.getElementById("location").innerText = data.resolvedAddress;
       document.getElementById("dateTime").innerText = new Date().toLocaleString();
 
-      // Set icon & background
-      setWeatherUI(data.currentConditions.conditions);
+      // Set icon & background (with day/night detection)
+      setWeatherUI(data.currentConditions.conditions, data);
 
       // Highlights
       document.getElementById("wind").innerText = data.currentConditions.windspeed || "--";
@@ -61,8 +61,8 @@ function fetchWeather(city) {
       document.getElementById("UVIndex").innerText = data.currentConditions.uvindex || "--";
       document.getElementById("AirQuality").innerText = data.currentConditions.feelslike || "--";
 
-      updateHourly();
-      updateWeekly();
+      updateHourly(data);
+      updateWeekly(data);
     })
     .catch(err => {
       console.error(err);
@@ -70,37 +70,70 @@ function fetchWeather(city) {
     });
 }
 
-/* MAP CONDITION TO ICON */
-function mapCondition(cond) {
+/* DETERMINE NIGHT OR DAY */
+function isNight(currentEpoch, sunriseStr, sunsetStr, timezoneOffset) {
+  const current = new Date(currentEpoch * 1000);
+
+  // Adjust for timezone offset (hours)
+  current.setHours(current.getUTCHours() + timezoneOffset);
+
+  const [srH, srM] = sunriseStr.split(":").map(Number);
+  const [ssH, ssM] = sunsetStr.split(":").map(Number);
+
+  const sunrise = new Date(current);
+  sunrise.setHours(srH, srM, 0, 0);
+
+  const sunset = new Date(current);
+  sunset.setHours(ssH, ssM, 0, 0);
+
+  return current < sunrise || current > sunset;
+}
+
+/* MAP CONDITION TO ICON (WITH DAY/NIGHT) */
+function mapCondition(cond, currentEpoch, sunriseStr, sunsetStr, timezoneOffset) {
   cond = cond.toLowerCase();
-  if (cond.includes("partly cloudy")) return "partly-cloudy-day";
-  if (cond.includes("cloudy")) return "partly-cloudy-day";
+  const night = isNight(currentEpoch, sunriseStr, sunsetStr, timezoneOffset);
+
+  if (cond.includes("partly cloudy")) return night ? "partly-cloudy-night" : "partly-cloudy-day";
+  if (cond.includes("cloudy")) return night ? "partly-cloudy-night" : "partly-cloudy-day";
   if (cond.includes("rain") || cond.includes("drizzle")) return "rain";
-  if (cond.includes("clear") || cond.includes("sunny")) return "clear-day";
-  if (cond.includes("night")) return "clear-night";
+  if (cond.includes("clear") || cond.includes("sunny")) return night ? "clear-night" : "clear-day";
+
   return "default";
 }
 
 /* SET ICON & BACKGROUND */
-function setWeatherUI(condition) {
-  const key = mapCondition(condition);
+function setWeatherUI(condition, data) {
+  const key = mapCondition(
+    condition,
+    data.currentConditions.datetimeEpoch,
+    data.days[0].sunrise,
+    data.days[0].sunset,
+    data.timezone.offset
+  );
   const weather = weatherMap[key] || weatherMap.default;
   document.getElementById("weatherIcon").src = weather.icon;
   document.body.style.backgroundImage = `url(${weather.bg})`;
 }
 
 /* UPDATE HOURLY */
-function updateHourly() {
+function updateHourly(data) {
   const hourlyDiv = document.getElementById("hourly");
   hourlyDiv.innerHTML = "";
 
   hourlyTempsC.forEach(h => {
     const temp = isCelsius ? h.temp : (h.temp * 9/5 + 32);
-    const icon = mapCondition(h.conditions);
+    const iconKey = mapCondition(
+      h.conditions,
+      h.datetimeEpoch,
+      data.days[0].sunrise,
+      data.days[0].sunset,
+      data.timezone.offset
+    );
     hourlyDiv.innerHTML += `
       <div class="hour">
         <p>${h.datetime.slice(0,5)}</p>
-        <img src="${weatherMap[icon]?.icon || weatherMap.default.icon}">
+        <img src="${weatherMap[iconKey]?.icon || weatherMap.default.icon}">
         <p>${Math.round(temp)}°</p>
       </div>
     `;
@@ -108,7 +141,7 @@ function updateHourly() {
 }
 
 /* UPDATE WEEKLY */
-function updateWeekly() {
+function updateWeekly(data) {
   const weeklyDiv = document.getElementById("weekly");
   weeklyDiv.innerHTML = "";
 
@@ -116,11 +149,17 @@ function updateWeekly() {
     const date = new Date(day.datetime);
     const weekday = date.toLocaleDateString("en-US", { weekday: "short" });
     const temp = isCelsius ? day.temp : (day.temp * 9/5 + 32);
-    const icon = mapCondition(day.conditions);
+    const iconKey = mapCondition(
+      day.conditions,
+      day.datetimeEpoch,
+      day.sunrise,
+      day.sunset,
+      data.timezone.offset
+    );
     weeklyDiv.innerHTML += `
       <div class="day">
         <p>${weekday}</p>
-        <img src="${weatherMap[icon]?.icon || weatherMap.default.icon}">
+        <img src="${weatherMap[iconKey]?.icon || weatherMap.default.icon}">
         <p>${Math.round(temp)}°</p>
       </div>
     `;
