@@ -2,44 +2,55 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Weather App Layout</title>
-  <link rel="stylesheet" href="css/style.css">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-
+  <title>Weather App</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <div class="background">
-    <div class="main-box">
+<div class="app">
 
-<!---left section- starts here-->
-      <div class="section left">
-        <div class="highlight"></div>
-        <p>Left Section</p>
-<!----Search Bar starts here-->
-        <div class="search-container">
-          <input type="text" placeholder="Search..." class="search-input"/>
-         <button class="search-btn">
-  <ion-icon name="search-outline"></ion-icon>
-</button>
-
-        </div>
-<!----Search Bar ends here-->
-      </div>
-<!---left section- ends here-->
-<hr color="black">
-<!---right section- starts here-->
-      <div class="section right">
-        <div class="highlight"></div>
-        <p>Right Section</p>
-      </div>
-<!---right section- ends here-->
-
-    </div>
+  <!-- LEFT PANEL -->
+  <div class="left">
+    <input type="text" id="cityInput" placeholder="Search city..." />
+    <img id="weatherIcon" src="">
+    <h1><span id="mainTemp">--</span>°</h1>
+    <p id="dateTime"></p>
+    <p id="condition"></p>
+    <p id="location"></p>
   </div>
 
-  
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-  <script src="js/script.js"></script>
+  <!-- RIGHT PANEL -->
+  <div class="right">
+
+    <div class="top">
+      <div class="tabs">
+        <span class="active">Today</span>
+        <span>Week</span>
+      </div>
+
+      <div class="unit-toggle">
+        <button id="cBtn" class="active">°C</button>
+        <button id="fBtn">°F</button>
+      </div>
+    </div>
+
+    <!-- HOURLY -->
+    <div class="hourly" id="hourly"></div>
+
+    <!-- WEEKLY -->
+    <div class="weekly" id="weekly"></div>
+
+    <h3>Today's Highlights</h3>
+    <div class="highlights">
+      <div class="card">Wind <span id="wind">--</span> km/h</div>
+      <div class="card">Humidity <span id="humidity">--</span>%</div>
+      <div class="card">Sunrise <span id="sunrise">--</span></div>
+      <div class="card">Visibility <span id="visibility">--</span></div>
+    </div>
+
+  </div>
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>

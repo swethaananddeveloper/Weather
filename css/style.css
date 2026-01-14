@@ -5,104 +5,134 @@
   font-family: Arial, sans-serif;
 }
 
-/* Dynamic image background */
-.background {
-  height: 100vh;
+body {
   background-size: cover;
   background-position: center;
-  animation: bgChange 15s infinite;
+}
+
+.app {
+  width: 1200px;
+  margin: 40px auto;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #f8fafc;
 }
 
-/* Background image animation */
-@keyframes bgChange {
-  0% {
-    background-image: url("https://images.unsplash.com/photo-1501630834273-4b5604d2ee31");
-  }
-  50% {
-    background-image: url("https://images.unsplash.com/photo-1501973801540-537f08ccae7b");
-  }
-  100% {
-    background-image: url("https://images.unsplash.com/photo-1502082553048-f009c37129b9");
-  }
-}
-
-/* Common white box */
-.main-box {
-  width: 80%;
-  max-width: 900px;
-  background-color: white;
-  border-radius: 12px;
+/* LEFT */
+.left {
+  width: 300px;
   padding: 30px;
-  display: flex;
-  gap: 20px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  background: rgba(255,255,255,0.85);
 }
 
-/* Left & Right sections */
-.section {
-  flex: 1;
-  padding: 20px;
-  border-radius: 8px;
-  background: #f9f9f9;
-}
-
-/* Black highlighted line */
-.highlight {
+.left input {
   width: 100%;
-  height: 4px;
-  background-color: black;
-  margin-bottom: 15px;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
 }
 
-/* Text */
-.section p {
-  font-size: 18px;
-  color: #333;
+.left img {
+  width: 120px;
+  margin: 30px auto;
+  display: block;
+}
+
+.left h1 {
+  font-size: 64px;
   text-align: center;
 }
 
- /* Search bar container */
-.search-container {
-  width: 100%;
+.left p {
+  text-align: center;
+  margin-top: 6px;
+  color: #475569;
+}
+
+/* RIGHT */
+.right {
+  flex: 1;
+  padding: 30px;
+}
+
+.top {
   display: flex;
-  justify-content: center;
-  margin-bottom: 25px;
+  justify-content: space-between;
 }
 
-/* Input field */
-.search-input {
-  width: 60%;
-  padding: 12px 15px;
-  border: 2px solid #ccc;
-  border-right: none;
-  border-radius: 8px 0 0 8px;
-  font-size: 16px;
-  outline: none;
-  transition: all 0.3s ease;
+.tabs span {
+  margin-right: 20px;
+  font-weight: bold;
 }
 
-/* Dynamic focus effect */
-.search-input:focus {
-  border-color: black;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+.tabs .active {
+  color: #2563eb;
 }
 
-/* Button */
-.search-btn {
-  padding: 12px 20px;
-  border: 1px solid black;
-  background-color: rgb(47, 154, 255);
-  color: white;
-  font-size: 16px;
+.unit-toggle button {
+  border: none;
+  padding: 8px 12px;
+  border-radius: 50%;
   cursor: pointer;
-  border-radius: 0 8px 8px 0;
-  transition: all 0.3s ease;
+  margin-left: 6px;
 }
 
-.search-btn ion-icon {
-  font-size: 24px;
+.unit-toggle .active {
+  background: black;
   color: white;
+}
+
+/* HOURLY */
+.hourly {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 15px;
+  margin: 25px 0;
+}
+
+.hour {
+  background: white;
+  padding: 15px;
+  border-radius: 14px;
+  text-align: center;
+}
+
+/* WEEKLY */
+.weekly {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.day {
+  background: white;
+  padding: 15px;
+  border-radius: 14px;
+  text-align: center;
+}
+
+.day img {
+  width: 40px;
+  margin: 8px 0;
+}
+
+/* HIGHLIGHTS */
+.highlights {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 14px;
+}
+
+.card span {
+  display: block;
+  font-size: 22px;
+  margin-top: 8px;
 }
